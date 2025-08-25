@@ -40,6 +40,383 @@ This is not a productivity app. It is a workshop for thinking. It is a rebellion
 Hidden Society offers a different path: a calm, rigorous environment where questions, reasoning, and experiments matter more than hot takes.
 
 ---
+Here’s a complete, copy-pasteable **GitHub README.md** for your project. I avoided the em dash character as requested.
+
+---
+
+# Hidden Society for Curiosity 🧠🌌
+
+> “Why are geniuses like Tesla, Newton, or Da Vinci no longer emerging today? Because modern systems limit human curiosity. Most humans are fed answers instead of encouraged to think. Our mission: give humans the freedom to explore, question, and create, using AI as a mentor, not a crutch.”
+
+---
+
+## 🔷 Overview
+
+* **Phase 1:** Invite-only digital think tank for thinkers, dreamers, and explorers.
+* **Core Problem:** Modern tech and education optimize for consumption and memorization, not independent thought.
+* **Solution:** A platform where humans interact with AI and each other to think, explore, and co-create rather than passively consume.
+* **Goal:** Ignite a new generation of creators and inventors who dare to question everything.
+
+---
+
+## 🔷 Core Motto
+
+> Free the human mind. Question everything. Collaborate with AI. Explore without limits.
+
+---
+
+## 🔷 Key Features (MVP)
+
+| Feature                | Description                                                                                                          |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Invite-only Membership | A secret society of curious humans who are willing to think deeply and push boundaries.                              |
+| AI Socratic Mentor     | AI guides, nudges, and challenges humans. It asks questions and offers frameworks rather than direct answers.        |
+| Weekly Big Question    | Sparks deep exploration. Examples: “Why do humans create art?”, “What is freedom?”, “Are we living in a simulation?” |
+| Creative Sandbox       | Members upload art, writing, music, prototypes, or experiments for collaborative critique.                           |
+| Curiosity Leaderboard  | Recognizes members who contribute insightful questions, ideas, experiments, and constructive critique.               |
+| Discussion Rooms       | Themed threads on philosophy, science, society, technology, and human purpose.                                       |
+
+---
+
+## 🔷 Tech Stack (MVP)
+
+* **Platform:** Discord or Slack (invite-only) for community and fast iteration
+* **AI:** GPT-class LLM via API or an open source LLM with an orchestration layer
+* **Backend:** FastAPI or Node with Express for APIs and webhooks
+* **Frontend (optional in Phase 1):** Next.js for a lightweight portal and public microsite
+* **Data:** Postgres or Supabase for relational data. Object storage (S3 or Supabase Storage) for uploads
+* **Auth:** Platform SSO for Discord or Slack in Phase 1. JWT if web portal needed
+* **Infra:** Docker for local dev, Fly.io or Railway or Vercel for quick deploys
+* **Observability:** Logtail or OpenTelemetry. Simple analytics via PostHog or Plausible
+* **Payments (later):** Stripe if you decide to sell limited membership later
+
+---
+
+## 🔷 System Architecture (Phase 1)
+
+```
+[Member] ⇄ Discord/Slack ⇄ Bot (Python) ⇄ Orchestrator API (FastAPI)
+                                     ⇅
+                                    LLM
+                                     ⇅
+                            Postgres + Object Storage
+```
+
+* Bot handles messages, invokes the **Socratic Mentor** prompt, stores conversations and scores.
+* Orchestrator API applies rules: rate limits, scoring, moderation, leaderboard updates.
+* Database stores users, invitations, threads, submissions, scores, and badges.
+
+---
+
+## 🔷 Data Model (simplified)
+
+**users**
+
+* id, handle, role {member, curator, admin}, joined\_at
+* invite\_code\_id, reputation\_score
+
+**threads**
+
+* id, topic, type {big\_question, sandbox, debate}, created\_by, created\_at
+
+**messages**
+
+* id, thread\_id, user\_id, content, tokens, created\_at
+* critique\_score, curiosity\_tags\[] (ex: “assumptions”, “evidence”, “counter-view”)
+
+**submissions**
+
+* id, user\_id, type {text, image, audio, code, link}, url, description, created\_at
+
+**scores**
+
+* id, user\_id, category {question\_quality, insight\_depth, evidence\_quality, synthesis}, value, created\_at
+
+**invites**
+
+* id, code, issued\_by, claimed\_by, claimed\_at, status
+
+---
+
+## 🔷 Curiosity Scoring (v0)
+
+Score each meaningful contribution on 0 to 5 in four buckets:
+
+1. **Question Quality:** clarity, originality, depth
+2. **Insight Depth:** identifies assumptions, links ideas, shows reasoning steps
+3. **Evidence Quality:** cites sources, distinguishes facts from opinion
+4. **Synthesis:** integrates opposing views, proposes experiments or next steps
+
+Member’s **reputation\_score** is a weighted rolling average of these.
+
+---
+
+## 🔷 MVP Prompt Library (Socratic Mentor)
+
+**General reply prompt**
+
+```
+You are a Socratic mentor. Your goal is to improve the member’s thinking without giving direct answers.
+
+Rules:
+1) Ask one or two pointed questions that reveal hidden assumptions.
+2) Offer a thinking tool or framework the member can apply.
+3) Suggest a small experiment or next step.
+4) Avoid definitive answers. Avoid appeals to authority.
+5) Encourage dialectical thinking: “what would convince you you’re wrong?”
+Return in under 120 words.
+```
+
+**Big Question kickoff**
+
+```
+Role: Moderator-Mentor
+Task: Launch a weekly Big Question with context, stakes, and constraints.
+Output: 3 probing sub-questions, 1 suggested method (e.g., premortem, 2x2, Fermi estimate), and a 15-minute exercise.
+Tone: invitational, rigorous, playful curiosity.
+```
+
+**Critique helper**
+
+```
+Role: Peer reviewer
+Task: Evaluate a member idea.
+Checklist: clarity, assumptions, evidence, alternatives, next test.
+Return: 3 strengths, 2 risks, 1 actionable next step.
+```
+
+---
+
+## 🔷 Execution Roadmap (6 Months)
+
+### Month 1: Setup
+
+* Office or creative lab setup
+* Discord or Slack workspace with channels: `#big-question`, `#sandbox`, `#mentor`, `#hall-of-curiosity`
+* Bot scaffold, database schema, initial prompts
+* Prepare first 3 Big Questions
+
+### Month 2: First Members
+
+* Invite 50 to 100 thinkers and creators
+* Onboard with a short guide and a 20-minute mentor demo
+* Launch weekly creative challenges and start scoring
+
+### Months 3 to 4: Deep Exploration
+
+* Run weekly Big Question debates with mentor nudges
+* Encourage AI-human co-creation in the sandbox
+* Publish a curiosity leaderboard and highlights
+
+### Month 5: Refinement and AI Evolution
+
+* Improve prompts for deeper reasoning and less hand-holding
+* Add mini simulations, thought experiments, design sprints
+* Gather feedback, tune scoring, adjust moderation
+
+### Month 6: Scale and Document
+
+* Document process, prompts, culture, and technical patterns
+* Prepare the public microsite and outline for Phase 2 app
+* Decide on growth: slow invite expansion or cohort launches
+
+---
+
+## 🔷 Community Rules and Culture
+
+1. Think first, consume later. AI guides, humans create.
+2. Curiosity over comfort. Bold ideas are welcome.
+3. Quality over quantity. One deep thought beats ten shallow posts.
+4. Debate the idea, not the person. Collaborate respectfully.
+5. Freedom to explore across domains: art, writing, music, tech, philosophy.
+
+---
+
+## 🔷 Onboarding Flow
+
+1. Receive invite code → join workspace
+2. Read the 2-minute culture primer
+3. Post a 150-word curiosity statement: “What problem or mystery pulls you?”
+4. Mentor replies with a micro-plan: one method and a next step
+5. Earn first points by asking a high-quality question or critique
+
+---
+
+## 🔷 Moderation Principles
+
+* **Integrity:** disclose when you use AI to draft text
+* **Civility:** critique ideas, never people
+* **Evidence:** separate facts, interpretations, and feelings
+* **Originality:** credit sources, avoid plagiarism
+* **Signal over noise:** repetitive or low-effort posts may be rate limited
+
+---
+
+## 🔷 Metrics That Matter
+
+* Weekly active thinkers
+* Ratio of questions to answers
+* Average thread depth before conclusion
+* Cross-domain references per thread
+* Number of experiments proposed and completed
+* Member retention after 4 and 12 weeks
+
+---
+
+## 🔷 Local Dev Setup
+
+### Prerequisites
+
+* Python 3.11+, Node 18+, Docker, Postgres, Make (optional)
+
+### Env Vars
+
+```
+# .env
+OPENAI_API_KEY=your_key_here
+DATABASE_URL=postgresql://user:pass@localhost:5432/curiosity
+DISCORD_BOT_TOKEN=your_bot_token
+APP_ENV=dev
+```
+
+### Quickstart
+
+```bash
+git clone https://github.com/your-org/hidden-society.git
+cd hidden-society
+cp .env.example .env
+docker compose up -d  # starts Postgres
+make dev              # or: uvicorn app.main:app --reload
+```
+
+---
+
+## 🔷 Minimal Bot Example (Python)
+
+```python
+# app/bot.py
+import os, asyncio
+from fastapi import FastAPI
+from dotenv import load_dotenv
+import discord
+
+load_dotenv()
+BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+
+SOC_PROMPT = (
+    "You are a Socratic mentor. Ask at most two sharp questions, "
+    "offer one thinking tool, and one tiny next step. No direct answers."
+)
+
+intents = discord.Intents.default()
+intents.message_content = True
+client = discord.Client(intents=intents)
+app = FastAPI()
+
+@client.event
+async def on_ready():
+    print(f"Logged in as {client.user}")
+
+@client.event
+async def on_message(message: discord.Message):
+    if message.author == client.user:
+        return
+    if message.channel.name in ("mentor", "big-question"):
+        user_text = message.content.strip()
+        reply = await mentor_reply(user_text)
+        await message.channel.send(reply)
+
+async def mentor_reply(user_text: str) -> str:
+    # Replace with your LLM call. For now, deterministic stub:
+    return (
+        f"Angle to explore: What assumption might be wrong in your view of '{user_text}'?\n"
+        f"Tool: 2x2 matrix of evidence vs uncertainty.\n"
+        f"Next step: list one observation that could change your mind."
+    )
+
+def run():
+    asyncio.run(client.start(BOT_TOKEN))
+
+if __name__ == "__main__":
+    run()
+```
+
+---
+
+## 🔷 Minimal API Example (FastAPI)
+
+```python
+# app/main.py
+from fastapi import FastAPI, Depends
+from pydantic import BaseModel
+from datetime import datetime
+
+app = FastAPI()
+
+class Contribution(BaseModel):
+    user_id: str
+    thread_id: str
+    content: str
+
+@app.post("/score")
+def score(c: Contribution):
+    # naive scoring for MVP
+    score = 0
+    if "why" in c.content.lower():
+        score += 2
+    if "assume" in c.content.lower():
+        score += 2
+    if "evidence" in c.content.lower():
+        score += 1
+    return {"score": score, "timestamp": datetime.utcnow().isoformat()}
+```
+
+---
+
+## 🔷 Weekly Big Question Template
+
+```
+Title: What is freedom in a world of algorithms?
+
+Context: Algorithms curate what we see and think about. What changes if we choose our inputs deliberately?
+
+Sub-questions:
+1) What is your working definition of freedom?
+2) Which input streams shape your choices the most?
+3) What single constraint, if removed, would increase your freedom today?
+
+Method: Premortem. Imagine your next 30 days fail to feel free. List 3 reasons. Now invert them into actions.
+
+15-minute exercise: Delete or mute one low-value feed and replace it with a book chapter or a long essay. Reflect and post one insight.
+```
+
+---
+
+## 🔷 Content and Highlight Workflow
+
+* Each week: pick a top thread, publish a 1 to 2 page summary
+* Archive member experiments with a one paragraph abstract and a link
+* Rotate member spotlights in the hall of curiosity channel
+* Optional: publish anonymized monthly digest on a public microsite
+
+---
+
+## 🔷 Privacy and Safety
+
+* Store only what you need. No sensitive personal data by default.
+* Opt-in for public sharing of creations.
+* Clear delete and export options for personal data.
+* Rate limit and content filters to avoid spam and harassment.
+
+---
+
+## 🔷 Long-Term Vision
+
+* **Phase 2:** Public AI-guided curiosity app that scales this experience to millions while keeping quality high through cohorts and guardrails
+* Publish books, podcasts, and videos that document the thinking journey
+* Grow globally so the hidden society becomes a movement for independent thought
+
+> This is not just a project. It is a rebellion against intellectual laziness and a celebration of curiosity as the ultimate superpower.
 
 ## 4) How The App Works, In 90 Seconds
 
