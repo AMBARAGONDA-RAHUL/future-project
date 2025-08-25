@@ -42,29 +42,6 @@ Hidden Society offers a different path: a calm, rigorous environment where quest
 ---
 Here’s a complete, copy-pasteable **GitHub README.md** for your project. I avoided the em dash character as requested.
 
----
-
-# Hidden Society for Curiosity 🧠🌌
-
-> “Why are geniuses like Tesla, Newton, or Da Vinci no longer emerging today? Because modern systems limit human curiosity. Most humans are fed answers instead of encouraged to think. Our mission: give humans the freedom to explore, question, and create, using AI as a mentor, not a crutch.”
-
----
-
-## 🔷 Overview
-
-* **Phase 1:** Invite-only digital think tank for thinkers, dreamers, and explorers.
-* **Core Problem:** Modern tech and education optimize for consumption and memorization, not independent thought.
-* **Solution:** A platform where humans interact with AI and each other to think, explore, and co-create rather than passively consume.
-* **Goal:** Ignite a new generation of creators and inventors who dare to question everything.
-
----
-
-## 🔷 Core Motto
-
-> Free the human mind. Question everything. Collaborate with AI. Explore without limits.
-
----
-
 ## 🔷 Key Features (MVP)
 
 | Feature                | Description                                                                                                          |
